@@ -1,0 +1,71 @@
+package com.salvadordalvik.fastlibrary;
+
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.android.volley.VolleyError;
+import com.salvadordalvik.fastlibrary.request.FastRequest;
+import com.salvadordalvik.fastlibrary.request.FastVolley;
+
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
+/**
+ * FastLib
+ * Created by Matthew Shepard on 11/17/13.
+ */
+public abstract class FastDialogFragment extends DialogFragment implements FastRequest.FastStatusCallback, OnRefreshListener {
+    private int layoutId;
+
+    public FastDialogFragment(int layoutId) {
+        super();
+        this.layoutId = layoutId;
+    }
+
+    public abstract void viewCreated(View frag, Bundle savedInstanceState);
+    public abstract void refreshData(boolean pullToRefresh);
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View frag = inflater.inflate(layoutId, container, false);
+        return frag;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        viewCreated(view, savedInstanceState);
+    }
+
+    protected void queueRequest(FastRequest request){
+        FastVolley.queueRequest(request, this);
+    }
+
+    @Override
+    public void onSuccess(FastRequest request) {
+    }
+
+    @Override
+    public void onFailure(FastRequest request, VolleyError error) {
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        refreshData(true);
+    }
+
+    public void invalidateOptionsMenu() {
+        Activity activity = getActivity();
+        if(activity != null){
+            activity.invalidateOptionsMenu();
+        }
+    }
+}

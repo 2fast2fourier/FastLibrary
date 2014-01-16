@@ -1,0 +1,52 @@
+package com.salvadordalvik.fastlibrary.util;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.widget.Toast;
+
+import java.util.List;
+
+/**
+ * binfeed
+ * Created by Matthew Shepard on 11/17/13.
+ */
+public class FastUtils {
+
+    private static int id = 99999;
+    public static synchronized int getSimpleUID(){
+        id++;
+        return id;
+    }
+
+    public static void startUrlIntent(Activity parent, String url){
+        if(parent != null && url != null){
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            PackageManager pacman = parent.getPackageManager();
+            List<ResolveInfo> res = pacman.queryIntentActivities(browserIntent,
+                    PackageManager.MATCH_DEFAULT_ONLY);
+            if (res.size() > 0) {
+                browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                parent.startActivity(browserIntent);
+            } else {
+                String[] split = url.split(":");
+                Toast.makeText(
+                        parent,
+                        "No application found for protocol" + (split.length > 0 ? ": " + split[0] : "."),
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
+        }
+    }
+
+    public static int safeParseInt(String integer, int fallback) {
+        try{
+            return Integer.parseInt(integer);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return fallback;
+    }
+}
