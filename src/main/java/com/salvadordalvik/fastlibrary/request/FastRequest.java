@@ -88,6 +88,7 @@ public abstract class FastRequest<T> {
                 T result = parseResponse(response);
                 return Response.success(result, HttpHeaderParser.parseCacheHeaders(response));
             }catch (Exception e){
+                e.printStackTrace();
                 return Response.error(new ParseError(e));
             }
         }

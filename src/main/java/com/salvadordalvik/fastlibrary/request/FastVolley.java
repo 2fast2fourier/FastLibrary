@@ -3,6 +3,7 @@ package com.salvadordalvik.fastlibrary.request;
 import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
@@ -17,8 +18,20 @@ public class FastVolley {
     private static LruImageCache imageCache;
 
     public static synchronized void init(Context context){
-        requestQueue = Volley.newRequestQueue(context.getApplicationContext());
-        imageCache = new LruImageCache(5242880);
+        init(context, 5242880, null);
+    }
+
+    public static synchronized void init(Context context, int imageCacheSizeLimit){
+        init(context, imageCacheSizeLimit, null);
+    }
+
+    public static synchronized void init(Context context, HttpStack stack){
+        init(context, 5242880, stack);
+    }
+    
+    public static synchronized void init(Context context, int imageCacheSizeLimit, HttpStack stack){
+        requestQueue = Volley.newRequestQueue(context.getApplicationContext(), stack);
+        imageCache = new LruImageCache(imageCacheSizeLimit);
         imageLoader = new ImageLoader(requestQueue, imageCache);
     }
 
