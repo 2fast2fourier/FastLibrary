@@ -45,4 +45,27 @@ public class FastQueryTask<T> extends AsyncTask<String, Void, Cursor> {
         }
         return items;
     }
+
+    public void query(String table, String sort){
+        execute(table, sort);
+    }
+
+    public void query(String table, String sort, String where){
+        execute(table, sort, where);
+    }
+
+    public void query(String table, String sort, String where, String... whereargs){
+        if(whereargs == null){
+            execute(table, sort, where);
+        }else{
+            String[] args = new String[whereargs.length+3];
+            args[0] = table;
+            args[1] = sort;
+            args[2] = where;
+            for(int ix=0;ix<whereargs.length;ix++){
+                args[ix+3] = whereargs[ix];
+            }
+            execute(args);
+        }
+    }
 }
