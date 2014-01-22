@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.List;
+
 /**
  * binfeed
  * Created by Matthew Shepard on 11/25/13.
@@ -20,6 +22,10 @@ public abstract class FastDatabase extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
+    public int insertRows(String table, List<ContentValues> values){
+        return insertRows(table, SQLiteDatabase.CONFLICT_ABORT, values);
+    }
+
     public int insertRows(String table, ContentValues... values){
         return insertRows(table, SQLiteDatabase.CONFLICT_ABORT, values);
     }
@@ -30,7 +36,25 @@ public abstract class FastDatabase extends SQLiteOpenHelper {
             SQLiteDatabase db = getWritableDatabase();
             db.beginTransaction();
             for(ContentValues value : values){
-                if(db.insertWithOnConflict(table, null, null, conflictAction) >= 0){
+                if(db.insertWithOnConflict(table, null, value, conflictAction) >= 0){
+                    rows++;
+                }
+            }
+            if(rows > 0){
+                db.setTransactionSuccessful();
+            }
+            db.endTransaction();
+        }
+        return rows;
+    }
+
+    public int insertRows(String table, int conflictAction, List<ContentValues> values){
+        int rows = 0;
+        synchronized (this){
+            SQLiteDatabase db = getWritableDatabase();
+            db.beginTransaction();
+            for(ContentValues value : values){
+                if(db.insertWithOnConflict(table, null, value, conflictAction) >= 0){
                     rows++;
                 }
             }
