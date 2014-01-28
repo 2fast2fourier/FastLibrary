@@ -18,7 +18,6 @@ import java.util.List;
  * Created by Matthew Shepard on 11/17/13.
  */
 public class FastAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
-    private Activity act;
     private Fragment frag;
     private ArrayList<FastItem> itemList = new ArrayList<FastItem>();
     private LayoutInflater inflater;
@@ -27,16 +26,21 @@ public class FastAdapter extends BaseAdapter implements AdapterView.OnItemClickL
     private int maxTypeCount;
     private int[] typeList;
 
-    public FastAdapter(Activity activity, Fragment fragment){
-        this(activity, fragment, 1);
+    public FastAdapter(Fragment fragment){
+        this(fragment, 1);
     }
 
-    public FastAdapter(Activity activity, Fragment fragment, int maxTypeCount) {
-        this.act = activity;
+    public FastAdapter(Fragment fragment, int maxTypeCount) {
         this.frag = fragment;
         this.typeList = null;
         this.maxTypeCount = maxTypeCount;
-        inflater = LayoutInflater.from(activity);
+    }
+
+    private LayoutInflater getInflator(){
+        if(inflater == null){
+            inflater = LayoutInflater.from(frag.getActivity());
+        }
+        return inflater;
     }
 
     private int generateViewType(int itemLayout){
@@ -100,7 +104,7 @@ public class FastAdapter extends BaseAdapter implements AdapterView.OnItemClickL
         FastItem item = itemList.get(position);
         Object viewHolder;
         if(convertView == null){
-            convertView = inflater.inflate(item.getLayoutId(), parent, false);
+            convertView = getInflator().inflate(item.getLayoutId(), parent, false);
             viewHolder = item.generateViewHolder(convertView);
             convertView.setTag(viewHolder);
         }else{
@@ -112,7 +116,7 @@ public class FastAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        itemList.get(position).onItemClick(act, frag);
+        itemList.get(position).onItemClick(frag.getActivity(), frag);
     }
 
     @Override

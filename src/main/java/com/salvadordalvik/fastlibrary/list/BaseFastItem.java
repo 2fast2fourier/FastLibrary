@@ -12,20 +12,16 @@ public abstract class BaseFastItem<T> implements FastItem {
     protected boolean enabled;
 
     public BaseFastItem(int layoutId) {
-        this(layoutId, FastUtils.getSimpleUID(), 0, true);
+        this(layoutId, FastUtils.getSimpleUID(), true);
     }
 
     public BaseFastItem(int layoutId, int id) {
-        this(layoutId, id, 0, true);
+        this(layoutId, id, true);
     }
 
-    public BaseFastItem(int layoutId, int id, int type) {
-        this(layoutId, id, type, true);
-    }
-
-    public BaseFastItem(int layoutId, int id, int type, boolean enabled) {
+    public BaseFastItem(int layoutId, int id, boolean enabled) {
         this.id = id;
-        this.type = type;
+        this.type = 0;
         this.layoutId = layoutId;
         this.enabled = enabled;
     }

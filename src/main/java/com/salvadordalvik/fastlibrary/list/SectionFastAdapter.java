@@ -17,7 +17,6 @@ import java.util.List;
  * Created by Matthew Shepard on 11/17/13.
  */
 public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
-    private Activity act;
     private Fragment frag;
     private FastItem[] combinedItemList = new FastItem[0];
     private ArrayList<ArrayList<FastItem>> sectionItemList = new ArrayList<ArrayList<FastItem>>();
@@ -27,12 +26,18 @@ public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnIte
     private int maxTypeCount;
     private int[] typeList;
 
-    public SectionFastAdapter(Activity activity, Fragment fragment, int maxTypeCount) {
-        this.act = activity;
+    public SectionFastAdapter(Fragment fragment, int maxTypeCount) {
         this.frag = fragment;
         this.typeList = null;
         this.maxTypeCount = maxTypeCount;
-        inflater = LayoutInflater.from(activity);
+    }
+
+    private LayoutInflater getInflater(){
+        Activity act = frag.getActivity();
+        if(inflater == null && act != null){
+            inflater = LayoutInflater.from(act);
+        }
+        return inflater;
     }
 
     private int generateViewType(int itemLayout){
@@ -144,7 +149,7 @@ public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnIte
         FastItem item = combinedItemList[position];
         Object viewHolder;
         if(convertView == null){
-            convertView = inflater.inflate(item.getLayoutId(), parent, false);
+            convertView = getInflater().inflate(item.getLayoutId(), parent, false);
             viewHolder = item.generateViewHolder(convertView);
             convertView.setTag(viewHolder);
         }else{
@@ -156,7 +161,7 @@ public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        combinedItemList[position].onItemClick(act, frag);
+        combinedItemList[position].onItemClick(frag.getActivity(), frag);
     }
 
     @Override
@@ -187,5 +192,12 @@ public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnIte
     @Override
     public boolean hasStableIds() {
         return true;
+    }
+
+    public ArrayList<FastItem> getSectionItems(int section) {
+        if(section >= sectionItemList.size()){
+            return null;
+        }
+        return sectionItemList.get(section);
     }
 }
