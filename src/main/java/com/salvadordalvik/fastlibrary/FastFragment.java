@@ -113,10 +113,12 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
         refreshData(false, staleRequest);
     }
 
-    protected void startRefreshIfStale() {
+    protected boolean startRefreshIfStale() {
         if(lastRefreshTime < System.currentTimeMillis() - 300000){
             startRefresh(true);
+            return true;
         }
+        return false;
     }
 
     public void setRefreshAnimation(boolean refreshing){
