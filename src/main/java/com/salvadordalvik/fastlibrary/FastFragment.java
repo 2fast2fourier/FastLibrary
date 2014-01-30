@@ -138,4 +138,11 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
             activity.invalidateOptionsMenu();
         }
     }
+
+    protected void setTitle(CharSequence title) {
+        Activity act = getActivity();
+        if(act != null){
+            act.setTitle(title);
+        }
+    }
 }
