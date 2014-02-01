@@ -20,4 +20,9 @@ public abstract class FastJsonArrayRequest<T> extends FastRequest<T> {
     }
 
     public abstract T parseJSONResponse(JSONArray response, NetworkResponse responseData);
+
+    @Override
+    protected String getBodyType() {
+        return "application/json; charset=utf-8";
+    }
 }

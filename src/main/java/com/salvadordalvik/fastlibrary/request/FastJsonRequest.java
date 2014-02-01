@@ -21,4 +21,9 @@ public abstract class FastJsonRequest<T> extends FastRequest<T> {
     }
 
     public abstract T parseJSONResponse(JSONObject response, NetworkResponse responseData);
+
+    @Override
+    protected String getBodyType() {
+        return "application/json; charset=utf-8";
+    }
 }

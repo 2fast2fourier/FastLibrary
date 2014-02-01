@@ -132,8 +132,12 @@ public abstract class FastRequest<T> {
 
         @Override
         public String getBodyContentType() {
-            return "application/json; charset=utf-8";
+            return getBodyType();
         }
+    }
+
+    protected String getBodyType(){
+        return "application/x-www-form-urlencoded; charset=UTF-8";
     }
 
     public static String parseCharset(Map<String, String> headers, String fallback){
