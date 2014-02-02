@@ -145,4 +145,11 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
             act.setTitle(title);
         }
     }
+
+    protected void runOnUiThread(Runnable runnable) {
+        Activity act = getActivity();
+        if(act != null){
+            act.runOnUiThread(runnable);
+        }
+    }
 }
