@@ -1,6 +1,7 @@
 package com.salvadordalvik.fastlibrary;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -23,15 +24,30 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  * Created by Matthew Shepard on 11/17/13.
  */
 public abstract class FastDialogFragment extends DialogFragment implements FastRequest.FastStatusCallback, OnRefreshListener {
-    private int layoutId;
+    private int layoutId, titleRes;
 
     public FastDialogFragment(int layoutId) {
         super();
         this.layoutId = layoutId;
     }
 
+    public FastDialogFragment(int layoutId, int titleRes) {
+        super();
+        this.layoutId = layoutId;
+        this.titleRes = titleRes;
+    }
+
     public abstract void viewCreated(View frag, Bundle savedInstanceState);
     public abstract void refreshData(boolean pullToRefresh);
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        if(titleRes > 0){
+            dialog.setTitle(titleRes);
+        }
+        return dialog;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +82,17 @@ public abstract class FastDialogFragment extends DialogFragment implements FastR
         Activity activity = getActivity();
         if(activity != null){
             activity.invalidateOptionsMenu();
+        }
+    }
+
+    protected void setTitle(int titleRes) {
+        setTitle(getString(titleRes));
+    }
+
+    protected void setTitle(String title) {
+        Dialog dialog = getDialog();
+        if(dialog != null){
+            dialog.setTitle(title);
         }
     }
 }
