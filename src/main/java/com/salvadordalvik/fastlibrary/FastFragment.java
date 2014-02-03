@@ -122,8 +122,11 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
     }
 
     public void setRefreshAnimation(boolean refreshing){
-        if(ptr != null){
+        if(ptr != null && ptr.isRefreshing() != refreshing){
             ptr.setRefreshing(refreshing);
+            if(refreshing){
+                setProgress(100);
+            }
         }
     }
 
@@ -150,6 +153,13 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
         Activity act = getActivity();
         if(act != null){
             act.runOnUiThread(runnable);
+        }
+    }
+
+    protected void setProgress(int newProgress) {
+        Activity activity = getActivity();
+        if(activity != null){
+            activity.setProgress(newProgress*100);
         }
     }
 }
