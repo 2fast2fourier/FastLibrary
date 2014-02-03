@@ -83,6 +83,20 @@ public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnIte
         return sectionItemList.get(section);
     }
 
+    public void replaceSection(int section, FastItem... list){
+        if(section < sectionItemList.size()){
+            sectionItemList.get(section).clear();
+        }
+        addItems(section, list);
+    }
+
+    public void replaceSection(int section, List<? extends FastItem> list){
+        if(section < sectionItemList.size()){
+            sectionItemList.get(section).clear();
+        }
+        addItems(section, list);
+    }
+
     public void addItems(int section, List<? extends FastItem> list){
         ArrayList<FastItem> itemList = getSection(section);
         itemList.addAll(list);
@@ -125,7 +139,7 @@ public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnIte
             }
             return count;
         }else{
-            return combinedItemList.length;
+            return combinedItemList.length-1;
         }
     }
 
