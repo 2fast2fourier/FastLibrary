@@ -1,13 +1,10 @@
 package com.salvadordalvik.fastlibrary;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,8 +12,6 @@ import com.android.volley.VolleyError;
 import com.salvadordalvik.fastlibrary.request.FastRequest;
 import com.salvadordalvik.fastlibrary.request.FastVolley;
 
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
@@ -79,9 +74,9 @@ public abstract class FastDialogFragment extends DialogFragment implements FastR
     }
 
     public void invalidateOptionsMenu() {
-        Activity activity = getActivity();
+        FragmentActivity activity = getActivity();
         if(activity != null){
-            activity.invalidateOptionsMenu();
+            activity.supportInvalidateOptionsMenu();
         }
     }
 

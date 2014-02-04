@@ -1,8 +1,9 @@
 package com.salvadordalvik.fastlibrary;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -136,9 +137,9 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
     }
 
     public void invalidateOptionsMenu() {
-        Activity activity = getActivity();
+        FragmentActivity activity = getActivity();
         if(activity != null){
-            activity.invalidateOptionsMenu();
+            activity.supportInvalidateOptionsMenu();
         }
     }
 

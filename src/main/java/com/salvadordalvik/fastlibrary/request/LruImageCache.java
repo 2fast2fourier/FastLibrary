@@ -3,7 +3,8 @@ package com.salvadordalvik.fastlibrary.request;
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.util.LruCache;
+import android.support.v4.util.LruCache;
+
 import com.android.volley.toolbox.ImageLoader;
 
 /**
@@ -18,6 +19,10 @@ public class LruImageCache extends LruCache<String, Bitmap> implements ImageLoad
      */
     public LruImageCache(int maxSize) {
         super(maxSize);
+    }
+
+    public LruImageCache(){
+        this(5242880);
     }
 
     @Override

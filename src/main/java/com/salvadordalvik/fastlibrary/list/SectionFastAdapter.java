@@ -1,12 +1,14 @@
 package com.salvadordalvik.fastlibrary.list;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+
+import com.salvadordalvik.fastlibrary.util.ArraysCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +55,7 @@ public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnIte
         if(typeList.length >= maxTypeCount){
             throw new RuntimeException("FastAdapter: Number of unique view types exceed maxTypeCount");
         }
-        typeList = Arrays.copyOf(typeList, typeList.length+1);
+        typeList = ArraysCompat.copyOf(typeList, typeList.length + 1);
         typeList[typeList.length-1] = itemLayout;
         return typeList.length-1;
     }
