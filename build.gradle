@@ -17,7 +17,7 @@ android {
     buildToolsVersion "19.0.1"
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 8
         targetSdkVersion 19
     }
 }
@@ -25,5 +25,5 @@ android {
 dependencies {
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.2'
     compile 'com.android.support:support-v4:+'
-    compile project(':volley')
+    compile 'com.mcxiaoke.volley:library:1.0.0'
 }

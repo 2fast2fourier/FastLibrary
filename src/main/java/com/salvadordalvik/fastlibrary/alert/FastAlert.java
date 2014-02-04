@@ -53,6 +53,25 @@ public class FastAlert {
         }
     }
 
+    /**
+     * Displays loading alert, the alert will not automatically close itself.
+     * Alert must be closed by calling dismiss() on the returned PopupWindow.
+     * Any future calls to display alerts will dismiss this alert to replace it.
+     * @param context
+     * @param parentView
+     * @param message
+     * @return
+     */
+    public static PopupWindow loadingIndeterminate(Context context, View parentView, String message){
+        if(context != null && !TextUtils.isEmpty(message) && parentView != null){
+            RotateAnimation anim = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            anim.setDuration(1000);
+            anim.setRepeatCount(Animation.INFINITE);
+            return displayAlert(context, parentView, message, null, -1, android.R.drawable.ic_popup_sync, anim);
+        }
+        throw new RuntimeException("FastAlert: Missing or Invalid Arguments");
+    }
+
     public static void error(Context context, View parentView, String message){
         if(context != null && !TextUtils.isEmpty(message) && parentView != null){
             AlphaAnimation anim = new AlphaAnimation(0.5f, 1.0f);
@@ -63,7 +82,7 @@ public class FastAlert {
         }
     }
 
-    private static void displayAlert(Context context, View parent, String title, String subtitle, int timeout, int icon, Animation animation){
+    private synchronized static PopupWindow displayAlert(Context context, View parent, String title, String subtitle, int timeout, int icon, Animation animation){
         if(currentAlert != null){
             currentAlert.dismiss();
             currentAlert = null;
@@ -100,6 +119,6 @@ public class FastAlert {
         if(timeout > 0){
             handler.postDelayed(popupCloseRunner, timeout);
         }
-
+        return currentAlert;
     }
 }
