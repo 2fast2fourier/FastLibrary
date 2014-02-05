@@ -133,6 +133,15 @@ public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnIte
         }
     }
 
+    public void clearSections(int... sections){
+        for(int section : sections){
+            if(section < sectionItemList.size()){
+                sectionItemList.get(section).clear();
+            }
+        }
+        regenerateCombinedList();
+    }
+
     public int getSectionOffset(int section){
         if(section < sectionItemList.size()){
             int count = 0;

@@ -100,29 +100,21 @@ public abstract class FastDatabase extends SQLiteOpenHelper {
         return query(args[0], null, args[2], whereArgs, null, null, args[1]);
     }
 
-    public Cursor query(String tableView, String[] columns, String where, String[] whereArgs, String group, String having, String sort){
-        synchronized (this){
-            Cursor result = getReadableDatabase().query(tableView, columns, where, whereArgs, group, having, sort);
-            return result;
-        }
+    public synchronized Cursor query(String tableView, String[] columns, String where, String[] whereArgs, String group, String having, String sort){
+        Cursor result = getReadableDatabase().query(tableView, columns, where, whereArgs, group, having, sort);
+        return result;
     }
 
-    public int deleteRows(String table, String where, String... whereArgs) {
-        synchronized (this){
-            int rows = getWritableDatabase().delete(table, where, whereArgs);
-            return rows;
-        }
+    public synchronized int deleteRows(String table, String where, String... whereArgs) {
+        int rows = getWritableDatabase().delete(table, where, whereArgs);
+        return rows;
     }
 
-    public Cursor rawQuery(String query, String... selectArgs){
-        synchronized (this){
-            return getWritableDatabase().rawQuery(query, selectArgs);
-        }
+    public synchronized Cursor rawQuery(String query, String... selectArgs){
+        return getWritableDatabase().rawQuery(query, selectArgs);
     }
 
-    public void execSQL(String sql){
-        synchronized (this){
-            getWritableDatabase().execSQL(sql);
-        }
+    public synchronized void execSQL(String sql){
+        getWritableDatabase().execSQL(sql);
     }
 }

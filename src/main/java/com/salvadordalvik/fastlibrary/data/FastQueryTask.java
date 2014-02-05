@@ -15,8 +15,9 @@ public class FastQueryTask<T> extends AsyncTask<String, Void, Cursor> {
     private final FastDatabase database;
 
     public interface QueryResultCallback<T>{
+        public int[] findColumns(Cursor data);
         public void queryResult(List<T> results);
-        public T createItem(Cursor data);
+        public T createItem(Cursor data, int[] columns);
     }
 
     public FastQueryTask(FastDatabase db, QueryResultCallback<T> callback) {
@@ -39,8 +40,12 @@ public class FastQueryTask<T> extends AsyncTask<String, Void, Cursor> {
     protected List<T> createList(Cursor data){
         ArrayList<T> items = new ArrayList<T>();
         if(data != null && !data.isClosed() && data.moveToFirst()){
+            int[] columns = callback.findColumns(data);
             do{
-                items.add(callback.createItem(data));
+                T item = callback.createItem(data, columns);
+                if(item != null){
+                    items.add(item);
+                }
             }while (data.moveToNext());
         }
         return items;
@@ -71,5 +76,13 @@ public class FastQueryTask<T> extends AsyncTask<String, Void, Cursor> {
             }
             execute(args);
         }
+    }
+
+    public static int[] findColumnIndicies(Cursor cursor, String[] columns){
+        int[] index = new int[columns.length];
+        for(int ix=0;ix<index.length;ix++){
+            index[ix] = cursor.getColumnIndex(columns[ix]);
+        }
+        return index;
     }
 }
