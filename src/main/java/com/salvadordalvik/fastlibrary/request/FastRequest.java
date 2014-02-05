@@ -21,7 +21,7 @@ public abstract class FastRequest<T> {
     private int method;
     private HashMap<String, String> headers = new HashMap<String, String>();
     private HashMap<String, String> params = new HashMap<String, String>();
-    private Uri.Builder url;
+    private String baseUrl;
 
     private FastStatusCallback externalCallback;
     private Response.Listener<T> successCallback;
@@ -33,9 +33,9 @@ public abstract class FastRequest<T> {
 
     public FastRequest(String baseUrl, int method, Response.Listener<T> success, Response.ErrorListener error) {
         this.method = method;
-        url = Uri.parse(baseUrl).buildUpon();
-        successCallback = success;
-        errorCallback = error;
+        this.baseUrl = baseUrl;
+        this.successCallback = success;
+        this.errorCallback = error;
     }
 
     public void addParam(String key, String value){
@@ -54,19 +54,25 @@ public abstract class FastRequest<T> {
         headers.put(key, value);
     }
 
-    public String generateUrl(){
+    protected String generateUrl(){
         if(method == Request.Method.GET){
+            Uri.Builder url = Uri.parse(baseUrl).buildUpon();
             for(Map.Entry<String, String> param : params.entrySet()){
                 url.appendQueryParameter(param.getKey(), param.getValue());
             }
+            return url.build().toString();
         }
-        return url.build().toString();
+        return baseUrl;
     }
 
     public abstract T parseResponse(NetworkResponse response) throws Exception;
 
     protected byte[] requestBody(){
         return null;
+    }
+
+    protected String getBodyType(){
+        return "application/x-www-form-urlencoded; charset=UTF-8";
     }
 
     public Request<T> build(FastStatusCallback callback){
@@ -134,10 +140,6 @@ public abstract class FastRequest<T> {
         public String getBodyContentType() {
             return getBodyType();
         }
-    }
-
-    protected String getBodyType(){
-        return "application/x-www-form-urlencoded; charset=UTF-8";
     }
 
     public static String parseCharset(Map<String, String> headers, String fallback){

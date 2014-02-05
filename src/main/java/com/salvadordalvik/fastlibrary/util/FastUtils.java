@@ -41,6 +41,9 @@ public class FastUtils {
         }
     }
 
+    public static int safeParseInt(String integer){
+        return safeParseInt(integer, 0);
+    }
     public static int safeParseInt(String integer, int fallback) {
         try{
             return Integer.parseInt(integer);
