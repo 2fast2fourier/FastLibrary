@@ -1,6 +1,7 @@
 package com.salvadordalvik.fastlibrary.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -51,5 +52,13 @@ public class FastUtils {
             e.printStackTrace();
         }
         return fallback;
+    }
+
+    public static void showSimpleShareChooser(Context context, String title, String message, String chooserTitle){
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_SUBJECT, title);
+        intent.putExtra(Intent.EXTRA_TEXT, message);
+        intent.setType("text/plain");
+        context.startActivity(Intent.createChooser(intent, chooserTitle));
     }
 }

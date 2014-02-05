@@ -122,6 +122,9 @@ public abstract class FastXMLRequest<Result> extends FastRequest<Result> {
                         textContent.append(xml.getText());
                     }
                     break;
+                case XmlPullParser.ENTITY_REF:
+                    textContent.append(xml.getText());
+                    break;
                 case XmlPullParser.TEXT:
                     if(textContent != null){
                         textContent.append(xml.getText());
