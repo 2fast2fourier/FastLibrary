@@ -82,6 +82,18 @@ public class FastAlert {
         }
     }
 
+    public static void custom(Context context, View parentView, String message, String submessage, int iconRes){
+        if(context != null && !TextUtils.isEmpty(message) && parentView != null){
+            displayAlert(context, parentView, message, submessage, DEFAULT_TIMEOUT, iconRes, null);
+        }
+    }
+
+    public static void custom(Context context, View parentView, String message, String submessage, int iconRes, int timeout, Animation animation){
+        if(context != null && !TextUtils.isEmpty(message) && parentView != null){
+            displayAlert(context, parentView, message, submessage, timeout, iconRes, animation);
+        }
+    }
+
     private synchronized static PopupWindow displayAlert(Context context, View parent, String title, String subtitle, int timeout, int icon, Animation animation){
         if(currentAlert != null){
             currentAlert.dismiss();
