@@ -34,6 +34,10 @@ public abstract class FastXMLRequest<Result> extends FastRequest<Result> {
     public static interface XmlAttributeCallback{
         public void attributeFound(String tagName, String attributeName, String attributeValue);
     }
+    public static interface ChildTagCallback{
+        public void childFound(String tagName, XmlPullParser xml) throws Exception;
+        public boolean otherTagFound(String otherTag, XmlPullParser xml) throws Exception;
+    }
 
     protected static boolean findNextTag(XmlPullParser xml, String tagName) throws IOException, XmlPullParserException {
         int event = xml.getEventType();
@@ -123,7 +127,9 @@ public abstract class FastXMLRequest<Result> extends FastRequest<Result> {
                     }
                     break;
                 case XmlPullParser.ENTITY_REF:
-                    textContent.append(xml.getText());
+                    if(textContent != null){
+                        textContent.append(xml.getText());
+                    }
                     break;
                 case XmlPullParser.TEXT:
                     if(textContent != null){
@@ -139,5 +145,25 @@ public abstract class FastXMLRequest<Result> extends FastRequest<Result> {
             }
         }
         return true;
+    }
+
+    protected static void findChildTags(XmlPullParser xml, String tag, ChildTagCallback callback) throws Exception{
+        int depth = 0, event;
+        do{
+            event = xml.nextToken();
+            switch (event){
+                case XmlPullParser.START_TAG:
+                    String currentTag = xml.getName();
+                    if(currentTag.equalsIgnoreCase(tag)){
+                        callback.childFound(currentTag, xml);
+                    }else if(!callback.otherTagFound(currentTag, xml)){
+                        depth++;
+                    }
+                    break;
+                case XmlPullParser.END_TAG:
+                    depth--;
+                    break;
+            }
+        }while(depth >= 0);
     }
 }

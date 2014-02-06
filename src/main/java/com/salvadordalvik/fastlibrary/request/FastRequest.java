@@ -50,6 +50,14 @@ public abstract class FastRequest<T> {
         addParam(key, Long.toString(value));
     }
 
+    public void addParam(String key, float value){
+        addParam(key, Float.toString(value));
+    }
+
+    public void addParam(String key, double value){
+        addParam(key, Double.toString(value));
+    }
+
     public void addHeader(String key, String value){
         headers.put(key, value);
     }
