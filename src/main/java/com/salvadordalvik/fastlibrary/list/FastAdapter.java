@@ -118,7 +118,9 @@ public class FastAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        itemList.get(position).onItemClick(frag.getActivity(), frag);
+        if(itemList.get(position).onItemClick(frag.getActivity(), frag)){
+            notifyDataSetChanged();
+        }
     }
 
     @Override

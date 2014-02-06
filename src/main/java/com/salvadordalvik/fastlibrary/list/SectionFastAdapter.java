@@ -186,7 +186,9 @@ public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        combinedItemList[position].onItemClick(frag.getActivity(), frag);
+        if(combinedItemList[position].onItemClick(frag.getActivity(), frag)){
+            notifyDataSetChanged();
+        }
     }
 
     @Override
