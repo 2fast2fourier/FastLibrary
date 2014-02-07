@@ -34,7 +34,7 @@ public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnIte
         this.maxTypeCount = maxTypeCount;
     }
 
-    private LayoutInflater getInflater(){
+    protected LayoutInflater getInflater(){
         Activity act = frag.getActivity();
         if(inflater == null && act != null){
             inflater = LayoutInflater.from(act);
