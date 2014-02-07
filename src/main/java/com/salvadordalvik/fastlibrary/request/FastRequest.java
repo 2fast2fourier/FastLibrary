@@ -88,12 +88,15 @@ public abstract class FastRequest<T> {
         return new FastInternalRequest(generateUrl(), successCallback, errorCallback);
     }
 
+    private static final RetryPolicy lenientRetryPolicy = new DefaultRetryPolicy(20000, 1, 1);
+
     private class FastInternalRequest extends Request<T>{
         private Response.Listener<T> successListener;
 
         public FastInternalRequest(String url, Response.Listener<T> success, Response.ErrorListener error) {
             super(method, url, error);
             this.successListener = success;
+            setRetryPolicy(lenientRetryPolicy);
         }
 
         @Override
@@ -148,6 +151,7 @@ public abstract class FastRequest<T> {
         public String getBodyContentType() {
             return getBodyType();
         }
+
     }
 
     public static String parseCharset(Map<String, String> headers, String fallback){
