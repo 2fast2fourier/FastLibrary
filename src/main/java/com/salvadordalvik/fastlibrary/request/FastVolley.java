@@ -35,6 +35,12 @@ public class FastVolley {
         imageLoader = new ImageLoader(requestQueue, imageCache);
     }
 
+    public static void queueRequest(FastRequest request, FastRequest.FastStatusCallback callback, Object tag){
+        Request req = request.build(callback);
+        req.setTag(tag);
+        queueRequest(req);
+    }
+
     public static void queueRequest(FastRequest request, FastRequest.FastStatusCallback callback){
         queueRequest(request.build(callback));
     }
@@ -67,5 +73,19 @@ public class FastVolley {
             throw new RuntimeException("Request Queue has not been initialized, CALL FastVolley.init() BEFORE USE");
         }
         return requestQueue;
+    }
+
+    /**
+     * NOTE: VOLLEY DOES TAG COMPARISON BY DIRECT EQUALITY.
+     * Beware: Two otherwise equal strings may fail the simple equality test. (==)
+     * Use a common object instance like a fragment, activity, or constant.
+     * @param tag
+     */
+    public static synchronized void cancelRequestByTag(Object tag){
+        getRequestQueue().cancelAll(tag);
+    }
+
+    public static synchronized void cancelRequestByFilter(RequestQueue.RequestFilter filter){
+        getRequestQueue().cancelAll(filter);
     }
 }

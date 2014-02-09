@@ -2,6 +2,8 @@ package com.salvadordalvik.fastlibrary;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -26,6 +28,8 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
     private int layoutId, menuId;
     private PullToRefreshLayout ptr = null;
     private long lastRefreshTime = 0;
+
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     public FastFragment(int layoutId) {
         this(layoutId, 0);
@@ -84,8 +88,12 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
         }
     }
 
+    public void queueRequest(FastRequest request, Object tag){
+        FastVolley.queueRequest(request, this, tag);
+    }
+
     public void queueRequest(FastRequest request){
-        FastVolley.queueRequest(request, this);
+        FastVolley.queueRequest(request, this, this);
     }
 
     @Override
@@ -164,5 +172,9 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
         if(activity != null){
             activity.setProgress(newProgress*100);
         }
+    }
+
+    protected Handler getHandler(){
+        return handler;
     }
 }
