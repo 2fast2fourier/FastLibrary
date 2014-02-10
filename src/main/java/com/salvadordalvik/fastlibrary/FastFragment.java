@@ -18,6 +18,7 @@ import com.salvadordalvik.fastlibrary.request.FastRequest;
 import com.salvadordalvik.fastlibrary.request.FastVolley;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
@@ -78,7 +79,11 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
     }
 
     protected void setupPullToRefresh(PullToRefreshLayout ptr){
-        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(ptr);
+        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).options(generatePullToRefreshOptions()).setup(ptr);
+    }
+
+    protected Options generatePullToRefreshOptions(){
+        return Options.create().build();
     }
 
     @Override
