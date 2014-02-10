@@ -77,7 +77,7 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
         }
     }
 
-    protected synchronized void setupPullToRefresh(PullToRefreshLayout ptr){
+    protected void setupPullToRefresh(PullToRefreshLayout ptr){
         ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(ptr);
     }
 
