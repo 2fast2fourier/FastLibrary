@@ -23,7 +23,7 @@ android {
 }
 
 dependencies {
-    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.2'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.3'
     compile 'com.android.support:support-v4:+'
     compile 'com.mcxiaoke.volley:library:1.0.0'
     compile 'com.google.guava:guava:16.0'

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,7 +63,7 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewCreated(view, savedInstanceState);
-        View peter = view.findViewById(R.id.ptr_layout);
+        View peter = view.findViewById(R.id.pulltorefresh_layout);
         if(peter instanceof PullToRefreshLayout){
             ptr = (PullToRefreshLayout) peter;
         }
@@ -76,7 +77,7 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
         }
     }
 
-    protected void setupPullToRefresh(PullToRefreshLayout ptr){
+    protected synchronized void setupPullToRefresh(PullToRefreshLayout ptr){
         ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(ptr);
     }
 
