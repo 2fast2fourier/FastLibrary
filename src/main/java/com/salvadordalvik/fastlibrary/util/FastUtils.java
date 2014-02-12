@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import java.util.List;
@@ -60,5 +61,11 @@ public class FastUtils {
         intent.putExtra(Intent.EXTRA_TEXT, message);
         intent.setType("text/plain");
         context.startActivity(Intent.createChooser(intent, chooserTitle));
+    }
+
+    public static float calculateScrollDistance(Activity activity, int inches){
+        DisplayMetrics metrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        return inches/(metrics.heightPixels/metrics.ydpi);
     }
 }

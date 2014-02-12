@@ -1,6 +1,7 @@
 package com.salvadordalvik.fastlibrary;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -182,5 +183,13 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
 
     protected Handler getHandler(){
         return handler;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(ptr != null){
+            setupPullToRefresh(ptr);
+        }
     }
 }
