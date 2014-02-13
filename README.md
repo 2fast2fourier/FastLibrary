@@ -1,7 +1,6 @@
 FastLibrary
 ===========
-A simple, minimal Android util framework library
-------------------------------------------------
+### A simple, minimal Android util framework library
 From the [Devil's Dictionary of Programming](http://programmingisterrible.com/post/65781074112/devils-dictionary-of-programming):
 -   simple — It solves my use case.
 -   minimal — You’re going to have to write more code than I did to make it useful.
@@ -9,7 +8,8 @@ From the [Devil's Dictionary of Programming](http://programmingisterrible.com/po
 -   framework — A product with the business logic removed, but all of the assumptions left in.
 
 Realistically, this library might not be of much use to you.
-Feel free to look at the implementation, read the documentation to see what each part does, and take what you want.
+
+Feel free to look at the implementation and take what you want.
 
 
 License
