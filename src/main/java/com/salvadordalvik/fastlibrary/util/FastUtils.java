@@ -63,7 +63,7 @@ public class FastUtils {
         context.startActivity(Intent.createChooser(intent, chooserTitle));
     }
 
-    public static float calculateScrollDistance(Activity activity, int inches){
+    public static float calculateScrollDistance(Activity activity, float inches){
         DisplayMetrics metrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
         return inches/(metrics.heightPixels/metrics.ydpi);
