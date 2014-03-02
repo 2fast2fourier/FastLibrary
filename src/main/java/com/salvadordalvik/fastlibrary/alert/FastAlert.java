@@ -39,9 +39,7 @@ public class FastAlert {
     };
 
     public static void notice(Context context, View parentView, String message){
-        if(context != null && !TextUtils.isEmpty(message) && parentView != null){
-            displayAlert(context, parentView, message, null, DEFAULT_TIMEOUT, android.R.drawable.ic_dialog_info, null);
-        }
+        displayAlert(context, parentView, message, null, DEFAULT_TIMEOUT, android.R.drawable.ic_dialog_info, null);
     }
 
     public static void process(Context context, View parentView, String message){
@@ -83,18 +81,17 @@ public class FastAlert {
     }
 
     public static void custom(Context context, View parentView, String message, String submessage, int iconRes){
-        if(context != null && !TextUtils.isEmpty(message) && parentView != null){
-            displayAlert(context, parentView, message, submessage, DEFAULT_TIMEOUT, iconRes, null);
-        }
+        displayAlert(context, parentView, message, submessage, DEFAULT_TIMEOUT, iconRes, null);
     }
 
     public static void custom(Context context, View parentView, String message, String submessage, int iconRes, int timeout, Animation animation){
-        if(context != null && !TextUtils.isEmpty(message) && parentView != null){
-            displayAlert(context, parentView, message, submessage, timeout, iconRes, animation);
-        }
+        displayAlert(context, parentView, message, submessage, timeout, iconRes, animation);
     }
 
     private synchronized static PopupWindow displayAlert(Context context, View parent, String title, String subtitle, int timeout, int icon, Animation animation){
+        if(context == null || parent == null || title == null || parent.getWindowToken() == null){
+            return null;
+        }
         if(currentAlert != null){
             currentAlert.dismiss();
             currentAlert = null;
