@@ -192,4 +192,12 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
             setupPullToRefresh(ptr);
         }
     }
+
+    public String getSafeString(int stringRes){
+        Activity act = getActivity();
+        if(act != null){
+            act.getString(stringRes);
+        }
+        return "";
+    }
 }
