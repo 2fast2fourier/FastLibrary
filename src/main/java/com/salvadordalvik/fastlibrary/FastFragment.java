@@ -196,7 +196,7 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
     public String getSafeString(int stringRes){
         Activity act = getActivity();
         if(act != null){
-            act.getString(stringRes);
+            return act.getString(stringRes);
         }
         return "";
     }
