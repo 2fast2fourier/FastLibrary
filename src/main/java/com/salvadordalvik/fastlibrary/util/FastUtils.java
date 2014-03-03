@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -87,5 +88,13 @@ public class FastUtils {
 
     private static boolean isKeyEnterCompat(KeyEvent event){
         return event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER);
+    }
+
+    public static String getSafeString(Fragment fragment, int stringRes) {
+        Activity act = fragment.getActivity();
+        if(act != null){
+            return act.getString(stringRes);
+        }
+        return "";
     }
 }
