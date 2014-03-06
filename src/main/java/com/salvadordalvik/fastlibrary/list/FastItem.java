@@ -15,6 +15,6 @@ public interface FastItem {
     public boolean isEnabled();
     public void updateView(View view, Object holder);
     public Object generateViewHolder(View view);
-    public boolean onItemClick(Activity act, Fragment fragment);
+    public void onItemClick(Activity act, Fragment fragment);
     public void setType(int type);
 }

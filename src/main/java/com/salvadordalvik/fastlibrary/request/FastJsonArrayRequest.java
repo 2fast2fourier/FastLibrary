@@ -19,7 +19,7 @@ public abstract class FastJsonArrayRequest<T> extends FastRequest<T> {
         return parseJSONResponse(new JSONArray(json), response);
     }
 
-    public abstract T parseJSONResponse(JSONArray response, NetworkResponse responseData);
+    public abstract T parseJSONResponse(JSONArray response, NetworkResponse responseData) throws Exception;
 
     @Override
     protected String getBodyType() {
