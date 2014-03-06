@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -120,17 +119,19 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
     }
 
     public void startRefresh(){
-        startRefresh(false);
+        startRefresh(false, false);
     }
 
-    public void startRefresh(boolean staleRequest){
-        setRefreshAnimation(true);
+    public void startRefresh(boolean staleRequest, boolean pullToRefresh){
+        if(!pullToRefresh){
+            setRefreshAnimation(true);
+        }
         refreshData(false, staleRequest);
     }
 
     protected boolean startRefreshIfStale() {
         if(lastRefreshTime < System.currentTimeMillis() - 300000){
-            startRefresh(true);
+            startRefresh(true, false);
             return true;
         }
         return false;
@@ -144,7 +145,7 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
 
     @Override
     public void onRefreshStarted(View view) {
-        refreshData(true, false);
+        startRefresh(false, true);
     }
 
     public void invalidateOptionsMenu() {
