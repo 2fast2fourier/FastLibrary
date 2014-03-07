@@ -123,10 +123,8 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
     }
 
     public void startRefresh(boolean staleRequest, boolean pullToRefresh){
-        if(!pullToRefresh){
-            setRefreshAnimation(true);
-        }
-        refreshData(false, staleRequest);
+        setRefreshAnimation(true);
+        refreshData(pullToRefresh, staleRequest);
     }
 
     protected boolean startRefreshIfStale() {
