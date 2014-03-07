@@ -113,6 +113,9 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
     }
 
     public void onRefreshCompleted(){
+        if(ptr != null){
+            ptr.setRefreshComplete();
+        }
         setRefreshAnimation(false);
         setProgress(100);
         lastRefreshTime = System.currentTimeMillis();
@@ -139,6 +142,10 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
         if(ptr != null && ptr.isRefreshing() != refreshing){
             ptr.setRefreshing(refreshing);
         }
+    }
+
+    public boolean isRefreshing(){
+        return ptr != null && ptr.isRefreshing();
     }
 
     @Override
