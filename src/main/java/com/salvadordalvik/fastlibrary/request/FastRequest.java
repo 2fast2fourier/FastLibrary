@@ -80,7 +80,11 @@ public abstract class FastRequest<T> {
     }
 
     protected String getBodyType(){
-        return "application/x-www-form-urlencoded; charset=UTF-8";
+        return "application/x-www-form-urlencoded; charset="+getBodyCharset();
+    }
+
+    protected String getBodyCharset(){
+        return "UTF-8";
     }
 
     public Request<T> build(FastStatusCallback callback){
@@ -152,6 +156,10 @@ public abstract class FastRequest<T> {
             return getBodyType();
         }
 
+        @Override
+        protected String getParamsEncoding() {
+            return getBodyCharset();
+        }
     }
 
     public static String parseCharset(Map<String, String> headers, String fallback){
