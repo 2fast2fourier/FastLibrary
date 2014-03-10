@@ -43,6 +43,10 @@ public class FastAlert {
         notice(fragment.getActivity(), fragment.getView(), FastUtils.getSafeString(fragment, messageRes), R.drawable.ic_action_about);
     }
 
+    public static void notice(Fragment fragment, int messageRes, int iconRes){
+        notice(fragment.getActivity(), fragment.getView(), FastUtils.getSafeString(fragment, messageRes), iconRes);
+    }
+
     public static void notice(Fragment fragment, String message){
         notice(fragment.getActivity(), fragment.getView(), message, R.drawable.ic_action_about);
     }

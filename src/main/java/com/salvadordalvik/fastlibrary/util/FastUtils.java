@@ -2,6 +2,8 @@ package com.salvadordalvik.fastlibrary.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -96,5 +98,24 @@ public class FastUtils {
             return act.getString(stringRes);
         }
         return "";
+    }
+
+    public static void copyToClipboard(Context context, String label, String text) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+            copyToClipboardCompatAPI11(context, label, text);
+        }else{
+            copyToClipboardCompat(context, label, text);
+        }
+    }
+
+    private static void copyToClipboardCompat(Context context, String label, String text){
+        android.text.ClipboardManager manager = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        manager.setText(text);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private static void copyToClipboardCompatAPI11(Context context, String label, String text){
+        ClipboardManager manager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        manager.setPrimaryClip(ClipData.newPlainText(label, text));
     }
 }
