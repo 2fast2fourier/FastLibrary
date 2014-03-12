@@ -227,4 +227,8 @@ public class SectionFastAdapter extends BaseAdapter implements AdapterView.OnIte
         }
         return sectionItemList.get(section);
     }
+
+    public FastItem[] getAllItems() {
+        return combinedItemList;
+    }
 }
