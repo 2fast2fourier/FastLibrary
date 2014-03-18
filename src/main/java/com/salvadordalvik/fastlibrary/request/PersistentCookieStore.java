@@ -49,6 +49,8 @@ public class PersistentCookieStore implements CookieStore {
             cv.put("cookie_secure", cookie.getSecure());
             cv.put("cookie_expires", getExpireDate(cookie.getMaxAge()));
             cookieDB.insertRows("cookies", SQLiteDatabase.CONFLICT_REPLACE, cv);
+        }else{
+            Log.w("PersistentCookieStore", "Ignoring cookie with invalid expiration: "+cookie.toString());
         }
     }
 
@@ -120,7 +122,7 @@ public class PersistentCookieStore implements CookieStore {
     }
 
     private static String getExpireDate(long maxAge){
-        return Long.toString((System.currentTimeMillis()+maxAge));
+        return Long.toString((System.currentTimeMillis()+(maxAge*1000)));
     }
 
     private static String getExpireDate(){
@@ -178,7 +180,7 @@ public class PersistentCookieStore implements CookieStore {
                     "cookie_uid TEXT UNIQUE NOT NULL," +
                     "cookie_uri TEXT," +
                     "cookie_domain TEXT NOT NULL," +
-                    "cookie_path TEXT NOT NULL," +
+                    "cookie_path TEXT," +
                     "cookie_name TEXT NOT NULL," +
                     "cookie_value TEXT NOT NULL," +
                     "cookie_max_age INTEGER DEFAULT 0," +
