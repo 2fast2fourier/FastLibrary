@@ -31,7 +31,6 @@ public class PersistentCookieStore implements CookieStore {
 
     @Override
     public void add(URI uri, HttpCookie cookie) {
-        Log.e("PersistentCookieStore", "add: "+uri+" - "+cookie+" - "+getCookieUID(uri, cookie));
         cookieDB.deleteRows("cookies", "cookie_expires<?", getExpireDate());
         if(cookie.getMaxAge() != 0){
             ContentValues cv = new ContentValues();
@@ -55,7 +54,6 @@ public class PersistentCookieStore implements CookieStore {
 
     @Override
     public List<HttpCookie> get(URI uri) {
-        Log.e("PersistentCookieStore", "get "+uri);
         ArrayList<HttpCookie> cookies = new ArrayList<HttpCookie>();
         Cursor data = cookieDB.query("cookies", null, "cookie_uri=? AND cookie_expires>=?", uri.getHost(), getExpireDate());
         int[] columns = CookieDatabase.getColumnIndicies(data);
@@ -73,7 +71,6 @@ public class PersistentCookieStore implements CookieStore {
 
     @Override
     public List<HttpCookie> getCookies() {
-        Log.e("PersistentCookieStore", "getCookies");
         ArrayList<HttpCookie> cookies = new ArrayList<HttpCookie>();
         Cursor data = cookieDB.query("cookies", null, "cookie_expires>=?", getExpireDate());
         int[] columns = CookieDatabase.getColumnIndicies(data);
@@ -91,7 +88,6 @@ public class PersistentCookieStore implements CookieStore {
 
     @Override
     public List<URI> getURIs() {
-        Log.e("PersistentCookieStore", "getURIs");
         ArrayList<URI> cookieUri = new ArrayList<URI>();
         Cursor data = cookieDB.query("cookies", null, "cookie_uri NOT NULL AND cookie_expires>=?", getExpireDate());
         int[] columns = CookieDatabase.getColumnIndicies(data);
@@ -111,13 +107,11 @@ public class PersistentCookieStore implements CookieStore {
 
     @Override
     public boolean remove(URI uri, HttpCookie cookie) {
-        Log.e("PersistentCookieStore", "remove: "+uri+" - "+cookie+" - "+getCookieUID(uri, cookie));
         return cookieDB.deleteRows("cookies", "cookie_uid=?", getCookieUID(uri, cookie)) > 0;
     }
 
     @Override
     public boolean removeAll() {
-        Log.e("PersistentCookieStore", "removeAll");
         return cookieDB.deleteRows("cookies", null) > 0;
     }
 
