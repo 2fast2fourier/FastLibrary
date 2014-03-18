@@ -1,6 +1,8 @@
 package com.salvadordalvik.fastlibrary.request;
 
 import android.net.Uri;
+import android.util.Log;
+
 import com.android.volley.*;
 import com.android.volley.toolbox.HttpHeaderParser;
 import org.apache.http.protocol.HTTP;
@@ -130,6 +132,9 @@ public abstract class FastRequest<T> {
         @Override
         public void deliverError(VolleyError error) {
             super.deliverError(error);
+            if(error != null){
+                error.printStackTrace();
+            }
             if(externalCallback != null){
                 externalCallback.onFailure(FastRequest.this, error);
             }

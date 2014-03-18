@@ -10,9 +10,12 @@ import java.util.List;
  * FastLib
  * Created by Matthew Shepard on 11/25/13.
  */
-public class FastQueryTask<T> extends AsyncTask<String, Void, Cursor> {
+public class FastQueryTask<T> extends AsyncTask<Void, Void, Cursor> {
     private final QueryResultCallback<T> callback;
     private final FastDatabase database;
+
+    private String table, sort, where;
+    private String[] whereArgs;
 
     public interface QueryResultCallback<T>{
         public int[] findColumns(Cursor data);
@@ -26,8 +29,8 @@ public class FastQueryTask<T> extends AsyncTask<String, Void, Cursor> {
     }
 
     @Override
-    protected Cursor doInBackground(String... params) {
-        return database.query(params);
+    protected Cursor doInBackground(Void... params) {
+        return database.query(table, sort, where, whereArgs);
     }
 
     @Override
@@ -52,30 +55,19 @@ public class FastQueryTask<T> extends AsyncTask<String, Void, Cursor> {
     }
 
     public void query(String table){
-        execute(table);
+        query(table, null, null);
     }
 
     public void query(String table, String sort){
-        execute(table, sort);
-    }
-
-    public void query(String table, String sort, String where){
-        execute(table, sort, where);
+        query(table, sort, null);
     }
 
     public void query(String table, String sort, String where, String... whereargs){
-        if(whereargs == null){
-            execute(table, sort, where);
-        }else{
-            String[] args = new String[whereargs.length+3];
-            args[0] = table;
-            args[1] = sort;
-            args[2] = where;
-            for(int ix=0;ix<whereargs.length;ix++){
-                args[ix+3] = whereargs[ix];
-            }
-            execute(args);
-        }
+        this.table = table;
+        this.sort = sort;
+        this.where = where;
+        this.whereArgs = whereargs;
+        execute();
     }
 
     public static int[] findColumnIndicies(Cursor cursor, String[] columns){
