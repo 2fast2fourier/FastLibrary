@@ -2,6 +2,7 @@ package com.salvadordalvik.fastlibrary.alert;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,9 +13,9 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.salvadordalvik.fastlibrary.R;
+import com.salvadordalvik.fastlibrary.util.FastUtils;
 
 /**
  * Created by matthewshepard on 1/31/14.
@@ -38,10 +39,24 @@ public class FastAlert {
         }
     };
 
+    public static void notice(Fragment fragment, int messageRes){
+        notice(fragment.getActivity(), fragment.getView(), FastUtils.getSafeString(fragment, messageRes), R.drawable.ic_action_about);
+    }
+
+    public static void notice(Fragment fragment, int messageRes, int iconRes){
+        notice(fragment.getActivity(), fragment.getView(), FastUtils.getSafeString(fragment, messageRes), iconRes);
+    }
+
+    public static void notice(Fragment fragment, String message){
+        notice(fragment.getActivity(), fragment.getView(), message, R.drawable.ic_action_about);
+    }
+
     public static void notice(Context context, View parentView, String message){
-        if(context != null && !TextUtils.isEmpty(message) && parentView != null){
-            displayAlert(context, parentView, message, null, DEFAULT_TIMEOUT, android.R.drawable.ic_dialog_info, null);
-        }
+        notice(context, parentView, message, R.drawable.ic_action_about);
+    }
+
+    public static void notice(Context context, View parentView, String message, int iconRes){
+        displayAlert(context, parentView, message, null, DEFAULT_TIMEOUT, iconRes, null);
     }
 
     public static void process(Context context, View parentView, String message){
@@ -49,7 +64,7 @@ public class FastAlert {
             RotateAnimation anim = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             anim.setDuration(1000);
             anim.setRepeatCount(Animation.INFINITE);
-            displayAlert(context, parentView, message, null, DEFAULT_TIMEOUT, android.R.drawable.ic_popup_sync, anim);
+            displayAlert(context, parentView, message, null, DEFAULT_TIMEOUT, R.drawable.ic_action_refresh, anim);
         }
     }
 
@@ -67,34 +82,45 @@ public class FastAlert {
             RotateAnimation anim = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             anim.setDuration(1000);
             anim.setRepeatCount(Animation.INFINITE);
-            return displayAlert(context, parentView, message, null, -1, android.R.drawable.ic_popup_sync, anim);
+            return displayAlert(context, parentView, message, null, -1, R.drawable.ic_action_refresh, anim);
         }
         return null;
     }
 
+    public static void error(Fragment fragment, int messageRes){
+        error(fragment.getActivity(), fragment.getView(), FastUtils.getSafeString(fragment, messageRes), R.drawable.ic_action_error);
+    }
+
+    public static void error(Fragment fragment, String message){
+        error(fragment.getActivity(), fragment.getView(), message, R.drawable.ic_action_error);
+    }
+
     public static void error(Context context, View parentView, String message){
+        error(context, parentView, message, R.drawable.ic_action_error);
+    }
+
+    public static void error(Context context, View parentView, String message, int iconRes){
         if(context != null && !TextUtils.isEmpty(message) && parentView != null){
             AlphaAnimation anim = new AlphaAnimation(0.5f, 1.0f);
             anim.setDuration(600);
             anim.setRepeatMode(Animation.REVERSE);
             anim.setRepeatCount(Animation.INFINITE);
-            displayAlert(context, parentView, message, null, DEFAULT_TIMEOUT, android.R.drawable.ic_dialog_alert, anim);
+            displayAlert(context, parentView, message, null, DEFAULT_TIMEOUT, iconRes, anim);
         }
     }
 
     public static void custom(Context context, View parentView, String message, String submessage, int iconRes){
-        if(context != null && !TextUtils.isEmpty(message) && parentView != null){
-            displayAlert(context, parentView, message, submessage, DEFAULT_TIMEOUT, iconRes, null);
-        }
+        displayAlert(context, parentView, message, submessage, DEFAULT_TIMEOUT, iconRes, null);
     }
 
     public static void custom(Context context, View parentView, String message, String submessage, int iconRes, int timeout, Animation animation){
-        if(context != null && !TextUtils.isEmpty(message) && parentView != null){
-            displayAlert(context, parentView, message, submessage, timeout, iconRes, animation);
-        }
+        displayAlert(context, parentView, message, submessage, timeout, iconRes, animation);
     }
 
     private synchronized static PopupWindow displayAlert(Context context, View parent, String title, String subtitle, int timeout, int icon, Animation animation){
+        if(context == null || parent == null || title == null || parent.getWindowToken() == null){
+            return null;
+        }
         if(currentAlert != null){
             currentAlert.dismiss();
             currentAlert = null;

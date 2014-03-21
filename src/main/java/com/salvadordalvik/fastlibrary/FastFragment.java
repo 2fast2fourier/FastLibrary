@@ -1,12 +1,12 @@
 package com.salvadordalvik.fastlibrary;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +18,7 @@ import com.salvadordalvik.fastlibrary.request.FastRequest;
 import com.salvadordalvik.fastlibrary.request.FastVolley;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
@@ -78,7 +79,11 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
     }
 
     protected void setupPullToRefresh(PullToRefreshLayout ptr){
-        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).setup(ptr);
+        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable().listener(this).options(generatePullToRefreshOptions()).setup(ptr);
+    }
+
+    protected Options generatePullToRefreshOptions(){
+        return Options.create().build();
     }
 
     @Override
@@ -109,25 +114,25 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
 
     public void onRefreshCompleted(){
         if(ptr != null){
-            ptr.setRefreshing(false);
+            ptr.setRefreshComplete();
         }
+        setRefreshAnimation(false);
+        setProgress(100);
+        lastRefreshTime = System.currentTimeMillis();
     }
 
     public void startRefresh(){
-        startRefresh(false);
+        startRefresh(false, false);
     }
 
-    public void startRefresh(boolean staleRequest){
-        if(ptr != null){
-            ptr.setRefreshing(true);
-        }
-        lastRefreshTime = System.currentTimeMillis();
-        refreshData(false, staleRequest);
+    public void startRefresh(boolean staleRequest, boolean pullToRefresh){
+        setRefreshAnimation(true);
+        refreshData(pullToRefresh, staleRequest);
     }
 
     protected boolean startRefreshIfStale() {
         if(lastRefreshTime < System.currentTimeMillis() - 300000){
-            startRefresh(true);
+            startRefresh(true, false);
             return true;
         }
         return false;
@@ -136,15 +141,16 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
     public void setRefreshAnimation(boolean refreshing){
         if(ptr != null && ptr.isRefreshing() != refreshing){
             ptr.setRefreshing(refreshing);
-            if(refreshing){
-                setProgress(100);
-            }
         }
+    }
+
+    public boolean isRefreshing(){
+        return ptr != null && ptr.isRefreshing();
     }
 
     @Override
     public void onRefreshStarted(View view) {
-        refreshData(true, false);
+        startRefresh(false, true);
     }
 
     public void invalidateOptionsMenu() {
@@ -177,5 +183,21 @@ public abstract class FastFragment extends Fragment implements FastRequest.FastS
 
     protected Handler getHandler(){
         return handler;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(ptr != null){
+            setupPullToRefresh(ptr);
+        }
+    }
+
+    public String getSafeString(int stringRes){
+        Activity act = getActivity();
+        if(act != null){
+            return act.getString(stringRes);
+        }
+        return "";
     }
 }
