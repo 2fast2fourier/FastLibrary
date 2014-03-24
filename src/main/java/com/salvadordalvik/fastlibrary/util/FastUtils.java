@@ -72,7 +72,7 @@ public class FastUtils {
     public static float calculateScrollDistance(Activity activity, float inches){
         DisplayMetrics metrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        return inches/(metrics.heightPixels/metrics.ydpi);
+        return (inches*160f)/(metrics.heightPixels/metrics.density);
     }
 
     public static boolean isKeyEnter(KeyEvent event) {
