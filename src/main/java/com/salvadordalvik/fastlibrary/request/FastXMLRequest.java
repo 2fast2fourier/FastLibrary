@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
 import com.android.volley.Response;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -22,7 +23,7 @@ public abstract class FastXMLRequest<Result> extends FastRequest<Result> {
     }
 
     @Override
-    public Result parseResponse(NetworkResponse response) throws Exception {
+    public Result parseResponse(Request<Result> request, NetworkResponse response) throws Exception {
         XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
         parser.setInput(new ByteArrayInputStream(response.data), parseCharset(response.headers, "UTF-8"));

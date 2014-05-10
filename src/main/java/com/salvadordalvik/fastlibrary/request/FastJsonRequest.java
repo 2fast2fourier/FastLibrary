@@ -1,6 +1,7 @@
 package com.salvadordalvik.fastlibrary.request;
 
 import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import org.json.JSONObject;
@@ -15,7 +16,7 @@ public abstract class FastJsonRequest<T> extends FastRequest<T> {
     }
 
     @Override
-    public T parseResponse(NetworkResponse response) throws Exception {
+    public T parseResponse(Request<T> request, NetworkResponse response) throws Exception {
         String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
         return parseJSONResponse(new JSONObject(json), response);
     }
