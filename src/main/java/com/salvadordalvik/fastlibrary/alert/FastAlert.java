@@ -2,6 +2,7 @@ package com.salvadordalvik.fastlibrary.alert;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -21,23 +22,15 @@ import com.salvadordalvik.fastlibrary.util.FastUtils;
  * Created by matthewshepard on 1/31/14.
  */
 public class FastAlert {
-    private static final int DEFAULT_TIMEOUT = 3000;
-
-    private static PopupWindow currentAlert;
-    private static final Handler handler = new Handler();
-    private static final Runnable popupCloseRunner = new Runnable() {
-        @Override
-        public void run() {
-            try{
-                if(currentAlert != null){
-                    currentAlert.dismiss();
-                    currentAlert = null;
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+    private static Handler handler;
+    private static Handler getHandler(){
+        if(handler == null){
+            handler = new Handler(Looper.getMainLooper());
         }
-    };
+        return handler;
+    }
+
+    private static final int DEFAULT_TIMEOUT = 3000;
 
     public static void notice(Fragment fragment, int messageRes){
         notice(fragment.getActivity(), fragment.getView(), FastUtils.getSafeString(fragment, messageRes), R.drawable.ic_action_about);
@@ -66,25 +59,6 @@ public class FastAlert {
             anim.setRepeatCount(Animation.INFINITE);
             displayAlert(context, parentView, message, null, DEFAULT_TIMEOUT, R.drawable.ic_action_refresh, anim);
         }
-    }
-
-    /**
-     * Displays loading alert, this alert will not automatically close itself.
-     * Alert must be closed by calling dismiss() on the returned PopupWindow.
-     * Any future calls to display alerts will dismiss this alert to replace it.
-     * @param context
-     * @param parentView The main view for the current fragment or activity. Required by PopupWindow.
-     * @param message Message to display.
-     * @return A PopupWindow instance without a timeout specified.
-     */
-    public static PopupWindow loadingIndeterminate(Context context, View parentView, String message){
-        if(context != null && !TextUtils.isEmpty(message) && parentView != null){
-            RotateAnimation anim = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            anim.setDuration(1000);
-            anim.setRepeatCount(Animation.INFINITE);
-            return displayAlert(context, parentView, message, null, -1, R.drawable.ic_action_refresh, anim);
-        }
-        return null;
     }
 
     public static void error(Fragment fragment, int messageRes){
@@ -121,11 +95,6 @@ public class FastAlert {
         if(context == null || parent == null || title == null || parent.getWindowToken() == null){
             return null;
         }
-        if(currentAlert != null){
-            currentAlert.dismiss();
-            currentAlert = null;
-            handler.removeCallbacks(popupCloseRunner);
-        }
         View popup = LayoutInflater.from(context).inflate(R.layout.alert_popup, null);
         TextView titleView = (TextView) popup.findViewById(R.id.popup_title);
         TextView subtitleView = (TextView) popup.findViewById(R.id.popup_subtitle);
@@ -144,18 +113,22 @@ public class FastAlert {
             }
         }
         int popupDimen = (int) context.getResources().getDimension(R.dimen.popup_size);
-        currentAlert = new PopupWindow(popup, popupDimen, popupDimen);
+        final PopupWindow currentAlert = new PopupWindow(popup, popupDimen, popupDimen);
         currentAlert.setBackgroundDrawable(null);
-        currentAlert.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                currentAlert = null;
-                handler.removeCallbacks(popupCloseRunner);
-            }
-        });
         currentAlert.showAtLocation(parent, Gravity.CENTER, 0, 0);
         if(timeout > 0){
-            handler.postDelayed(popupCloseRunner, timeout);
+            getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try{
+                        if(currentAlert.isShowing()){
+                            currentAlert.dismiss();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }, timeout);
         }
         return currentAlert;
     }
